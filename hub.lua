@@ -316,11 +316,42 @@ local currentTheme = "Dark"
 ThemeSection:Dropdown({
     Title = "Selecionar Tema",
     Description = "Escolha o tema da interface",
-    Options = { "Dark", "Light", "Auto" },
+    Options = { "Rosa", "Preto", "Branco", "Vermelho", "Roxo", "Verde", "Azul", "Amarelo", "Laranja", "Ciano", "Cinza", "Auto" },
     Default = "Dark",
     Callback = function(value)
         currentTheme = value
         print("✓ Tema alterado para: " .. value)
+        -- Mapeamento de nomes para cores
+        local colors = {
+            Rosa = Color3.fromRGB(255, 105, 180),
+            Preto = Color3.fromRGB(0, 0, 0),
+            Branco = Color3.fromRGB(255, 255, 255),
+            Vermelho = Color3.fromRGB(220, 20, 60),
+            Roxo = Color3.fromRGB(128, 0, 128),
+            Verde = Color3.fromRGB(0, 255, 0),
+            Azul = Color3.fromRGB(0, 120, 255),
+            Amarelo = Color3.fromRGB(255, 215, 0),
+            Laranja = Color3.fromRGB(255, 140, 0),
+            Ciano = Color3.fromRGB(0, 255, 255),
+            Cinza = Color3.fromRGB(128, 128, 128),
+            Auto = nil,
+        }
+
+        local chosen = colors[value]
+
+        -- Aplicar cor aos elementos visíveis da UI (tentativa genérica)
+        local player = game:GetService("Players").LocalPlayer
+        local pg = player:FindFirstChild("PlayerGui")
+        if pg and chosen then
+            for _, gui in pairs(pg:GetDescendants()) do
+                if gui:IsA("Frame") or gui:IsA("TextLabel") or gui:IsA("ImageLabel") or gui:IsA("TextButton") then
+                    pcall(function()
+                        if gui.BackgroundColor3 then gui.BackgroundColor3 = chosen end
+                        if gui.TextColor3 then gui.TextColor3 = (value == "Preto" and Color3.fromRGB(255,255,255) or Color3.fromRGB(0,0,0)) end
+                    end)
+                end
+            end
+        end
     end,
 })
 
