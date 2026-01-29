@@ -44,6 +44,24 @@ screenGui:Destroy()
 
 local MainTab = Window:Tab({ Title = "Tsunami Brainrot", Icon = "home" })
 
+-- Adicionar imagem no topo da janela
+local imageSection = MainTab:Section({ Title = "" })
+
+-- Criar ImageLabel customizado
+local player = game:GetService("Players").LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Encontrar a janela da WindUI
+local rnanHubGui = playerGui:FindFirstChild("RnanHub") or playerGui:FindFirstChild("Rnan Hub")
+if rnanHubGui then
+    local imageLabel = Instance.new("ImageLabel")
+    imageLabel.Name = "HubIcon"
+    imageLabel.Size = UDim2.new(0, 100, 0, 100)
+    imageLabel.BackgroundTransparency = 1
+    imageLabel.Image = "https://i.imgur.com/ob1cHgw.png"
+    imageLabel.Parent = rnanHubGui
+end
+
 local isFlying = false
 local speed = 0
 local bodyVelocity = nil
