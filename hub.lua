@@ -107,6 +107,55 @@ for i, zone in pairs(zones) do
     })
 end
 
+-- ============ SEÇÃO DE HITBOX ============
+local HitboxSection = MainTab:Section({ Title = "Hitbox" })
+
+-- Variáveis de controle
+local hitboxIncreased = false
+
+-- Função para aumentar hitbox
+local function increaseHitbox()
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character
+    if not character then return end
+    
+    for _, part in pairs(character:GetDescendants()) do
+        if part:IsA("Part") or part:IsA("UnionOperation") then
+            part.Size = part.Size * 3
+        end
+    end
+    
+    hitboxIncreased = true
+end
+
+-- Função para remover hitbox grande
+local function decreaseHitbox()
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character
+    if not character then return end
+    
+    -- Recarregar o character para voltar ao normal
+    character:BreakJoints()
+    
+    hitboxIncreased = false
+end
+
+HitboxSection:Button({
+    Title = "Aumentar Hitbox",
+    Description = "Faça sua hitbox 3x maior para bater de longe",
+    Callback = function()
+        increaseHitbox()
+    end,
+})
+
+HitboxSection:Button({
+    Title = "Remover Hitbox Grande",
+    Description = "Volta a hitbox ao normal",
+    Callback = function()
+        decreaseHitbox()
+    end,
+})
+
 local isFlying = false
 local speed = 0
 local bodyVelocity = nil
