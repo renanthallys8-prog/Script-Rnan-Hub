@@ -1,7 +1,30 @@
-print("✓ Script carregou!")
+-- Mostrar notificação de carregamento
+local player = game:GetService("Players").LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "RnanHubNotif"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = playerGui
+
+local textLabel = Instance.new("TextLabel")
+textLabel.Name = "NotifLabel"
+textLabel.Size = UDim2.new(0, 300, 0, 100)
+textLabel.Position = UDim2.new(0.5, -150, 0, 20)
+textLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+textLabel.BackgroundTransparency = 0.3
+textLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+textLabel.TextSize = 18
+textLabel.Font = Enum.Font.GothamBold
+textLabel.Text = "✓ Rnan Hub carregando..."
+textLabel.Parent = screenGui
+
+task.wait(1)
 
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
-print("✓ WindUI carregado!")
+
+textLabel.Text = "✓ WindUI carregado!"
+task.wait(0.5)
 
 local Window = WindUI:CreateWindow({
     Title = "Rnan Hub",
@@ -12,7 +35,9 @@ local Window = WindUI:CreateWindow({
     Theme = "Dark",
     Resizable = true,
 })
-print("✓ Janela criada!")
+
+textLabel.Text = "✓ Janela criada!"
+task.wait(0.5)
 
 local MainTab = Window:Tab({ Title = "Tsunami Brainrot", Icon = "home" })
 
