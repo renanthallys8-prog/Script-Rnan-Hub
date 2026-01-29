@@ -1,4 +1,7 @@
+print("✓ Script carregou!")
+
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+print("✓ WindUI carregado!")
 
 local Window = WindUI:CreateWindow({
     Title = "Rnan Hub",
@@ -9,6 +12,7 @@ local Window = WindUI:CreateWindow({
     Theme = "Dark",
     Resizable = true,
 })
+print("✓ Janela criada!")
 
 local MainTab = Window:Tab({ Title = "Tsunami Brainrot", Icon = "home" })
 
