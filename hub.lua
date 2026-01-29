@@ -156,6 +156,155 @@ HitboxSection:Button({
     end,
 })
 
+-- ============ TAB BROOKHAVEN ============
+local BrookhavenTab = Window:Tab({ Title = "Brookhaven", Icon = "home" })
+
+-- Seção de Velocidades
+local BrookVelSection = BrookhavenTab:Section({ Title = "Velocidades" })
+
+local function setWalkSpeed(v)
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then humanoid.WalkSpeed = v end
+    end
+end
+
+BrookVelSection:Button({ Title = "Velocidade 30", Callback = function() setWalkSpeed(30) end })
+BrookVelSection:Button({ Title = "Velocidade 100", Callback = function() setWalkSpeed(100) end })
+BrookVelSection:Button({ Title = "Velocidade 200", Callback = function() setWalkSpeed(200) end })
+BrookVelSection:Button({ Title = "Velocidade 300", Callback = function() setWalkSpeed(300) end })
+BrookVelSection:Button({ Title = "Velocidade 400", Callback = function() setWalkSpeed(400) end })
+
+-- Seção ESP
+local ESPSection = BrookhavenTab:Section({ Title = "ESP" })
+
+local espEnabled = false
+local espConnection = nil
+
+local function enableESP()
+    if espEnabled then return end
+    espEnabled = true
+    
+    local players = game:GetService("Players")
+    
+    espConnection = game:GetService("RunService").RenderStepped:Connect(function()
+        if not espEnabled then return end
+        
+        for _, player in pairs(players:GetPlayers()) do
+            if player == players.LocalPlayer then continue end
+            
+            local character = player.Character
+            if not character then continue end
+            
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            local humanoid = character:FindFirstChild("Humanoid")
+            
+            if humanoidRootPart and humanoid then
+                -- Criar ou atualizar Billboard
+                local billboard = humanoidRootPart:FindFirstChild("ESPBillboard")
+                if not billboard then
+                    billboard = Instance.new("BillboardGui")
+                    billboard.Name = "ESPBillboard"
+                    billboard.Size = UDim2.new(4, 0, 2, 0)
+                    billboard.MaxDistance = math.huge
+                    billboard.Parent = humanoidRootPart
+                    
+                    local textLabel = Instance.new("TextLabel")
+                    textLabel.Name = "ESPLabel"
+                    textLabel.BackgroundTransparency = 1
+                    textLabel.Size = UDim2.new(1, 0, 1, 0)
+                    textLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+                    textLabel.TextSize = 12
+                    textLabel.Font = Enum.Font.GothamBold
+                    textLabel.Parent = billboard
+                end
+                
+                local textLabel = billboard:FindFirstChild("ESPLabel")
+                if textLabel then
+                    textLabel.Text = player.Name .. "\nVida: " .. humanoid.Health .. "/" .. humanoid.MaxHealth .. "\n" .. (character:FindFirstChild("Head") and "✓" or "")
+                end
+            end
+        end
+    end)
+end
+
+local function disableESP()
+    espEnabled = false
+    if espConnection then
+        espConnection:Disconnect()
+    end
+    
+    local players = game:GetService("Players")
+    for _, player in pairs(players:GetPlayers()) do
+        local character = player.Character
+        if character then
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                local billboard = humanoidRootPart:FindFirstChild("ESPBillboard")
+                if billboard then
+                    billboard:Destroy()
+                end
+            end
+        end
+    end
+end
+
+ESPSection:Button({
+    Title = "Ativar ESP",
+    Description = "Mostra nomes, vida e personagens",
+    Callback = function()
+        enableESP()
+    end,
+})
+
+ESPSection:Button({
+    Title = "Desativar ESP",
+    Description = "Desativa o ESP",
+    Callback = function()
+        disableESP()
+    end,
+})
+
+-- Seção Teleportes
+local TeleportBrookSection = BrookhavenTab:Section({ Title = "Teleportes" })
+
+local function teleportToLocation(pos)
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character
+    if character then
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        if humanoidRootPart then
+            humanoidRootPart.CFrame = CFrame.new(pos + Vector3.new(0, 3, 0))
+        end
+    end
+end
+
+TeleportBrookSection:Button({
+    Title = "Teleportar para Banco",
+    Description = "Vai para o banco",
+    Callback = function()
+        teleportToLocation(Vector3.new(220, 5, 340))
+    end,
+})
+
+TeleportBrookSection:Button({
+    Title = "Teleportar para Escola",
+    Description = "Vai para a escola",
+    Callback = function()
+        teleportToLocation(Vector3.new(-550, 5, -200))
+    end,
+})
+
+TeleportBrookSection:Button({
+    Title = "Teleportar para Praça (Início)",
+    Description = "Vai para a praça",
+    Callback = function()
+        teleportToLocation(Vector3.new(0, 5, 0))
+    end,
+})
+
 local isFlying = false
 local speed = 0
 local bodyVelocity = nil
