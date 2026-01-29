@@ -62,6 +62,51 @@ if rnanHubGui then
     imageLabel.Parent = rnanHubGui
 end
 
+-- ============ SEÇÃO DE TELEPORTE ============
+local TeleportSection = MainTab:Section({ Title = "Teleportes" })
+
+-- Função para teleportar
+local function teleportToZone(zone)
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character
+    if not character then return end
+    
+    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+    if not humanoidRootPart then return end
+    
+    if zone and zone:IsA("Part") or zone:IsA("Model") then
+        local targetPos = zone:IsA("Part") and zone.Position or zone:FindFirstChild("HumanoidRootPart") and zone.HumanoidRootPart.Position or zone:GetBoundingBox().Position
+        humanoidRootPart.CFrame = CFrame.new(targetPos + Vector3.new(0, 3, 0))
+    end
+end
+
+-- Detectar zonas automaticamente
+local workspace = game:GetService("Workspace")
+local zones = {}
+local zoneIndex = 1
+
+-- Procurar por partes grandes (plataformas)
+for _, part in pairs(workspace:GetDescendants()) do
+    if part:IsA("Part") and part.Size.Magnitude > 5 and part.CanCollide then
+        if not part.Parent:FindFirstChild("Humanoid") then
+            zones[zoneIndex] = part
+            zoneIndex = zoneIndex + 1
+            if zoneIndex > 10 then break end
+        end
+    end
+end
+
+-- Criar botões para cada zona
+for i, zone in pairs(zones) do
+    TeleportSection:Button({
+        Title = "Teleportar para Zona " .. i,
+        Description = "Ir para zona segura #" .. i,
+        Callback = function()
+            teleportToZone(zone)
+        end,
+    })
+end
+
 local isFlying = false
 local speed = 0
 local bodyVelocity = nil
