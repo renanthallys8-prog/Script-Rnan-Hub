@@ -305,6 +305,63 @@ TeleportBrookSection:Button({
     end,
 })
 
+-- ============ TAB CONFIGURAÇÕES ============
+local SettingsTab = Window:Tab({ Title = "Configurações", Icon = "settings" })
+
+-- Seção de Tema
+local ThemeSection = SettingsTab:Section({ Title = "Tema" })
+
+local currentTheme = "Dark"
+
+ThemeSection:Dropdown({
+    Title = "Selecionar Tema",
+    Description = "Escolha o tema da interface",
+    Options = { "Dark", "Light", "Auto" },
+    Default = "Dark",
+    Callback = function(value)
+        currentTheme = value
+        print("✓ Tema alterado para: " .. value)
+    end,
+})
+
+-- Seção de Fontes
+local FontSection = SettingsTab:Section({ Title = "Fonte" })
+
+local fonts = {
+    "GothamBold",
+    "GothamBlack",
+    "GothamMedium",
+    "Arcade",
+    "Arial",
+    "Code"
+}
+
+FontSection:Dropdown({
+    Title = "Selecionar Fonte",
+    Description = "Escolha o estilo de fonte",
+    Options = fonts,
+    Default = "GothamBold",
+    Callback = function(value)
+        print("✓ Fonte alterada para: " .. value)
+    end,
+})
+
+-- Seção Informações
+local InfoSection = SettingsTab:Section({ Title = "Informações" })
+
+InfoSection:Label({
+    Title = "Versão: 2.0",
+})
+
+InfoSection:Label({
+    Title = "Desenvolvedor: Renan",
+})
+
+InfoSection:Paragraph({
+    Title = "Bem-vindo ao Rnan Hub!",
+    Text = "Hub multi-jogo com várias features. Suporte para Tsunami Brainrot e Brookhaven!",
+})
+
 local isFlying = false
 local speed = 0
 local bodyVelocity = nil
