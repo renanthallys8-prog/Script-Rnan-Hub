@@ -44,6 +44,70 @@ screenGui:Destroy()
 
 local MainTab = Window:Tab({ Title = "Tsunami Brainrot", Icon = "home" })
 
+-- ============ CONFIG: ADMIN ============
+-- Coloque aqui seu UserId (recomendado) ou seu username para ter acesso ao painel de admin
+local ADMIN_IDS = { 0 } -- substitua 0 pelo seu UserId, ex: { 12345678 }
+local ADMIN_USERNAMES = { "YourUsername" } -- ou substitua pelo seu nome de usuário
+
+local function isAdmin()
+    local pl = game:GetService("Players").LocalPlayer
+    if not pl then return false end
+    for _, id in ipairs(ADMIN_IDS) do
+        if pl.UserId == id then return true end
+    end
+    for _, name in ipairs(ADMIN_USERNAMES) do
+        if pl.Name == name then return true end
+    end
+    return false
+end
+
+if isAdmin() then
+    local AdminTab = Window:Tab({ Title = "Admin", Icon = "shield" })
+    local AdminSection = AdminTab:Section({ Title = "Painel Admin" })
+
+    local selectedPlayerName = nil
+    local function getPlayerNames()
+        local t = {}
+        for _, p in pairs(game:GetService("Players"):GetPlayers()) do
+            table.insert(t, p.Name)
+        end
+        return t
+    end
+
+    AdminSection:Dropdown({
+        Title = "Selecionar Jogador",
+        Description = "Escolha um jogador",
+        Options = getPlayerNames(),
+        Default = "",
+        Callback = function(value)
+            selectedPlayerName = value
+        end,
+    })
+
+    AdminSection:Button({
+        Title = "Teleportar jogador para mim",
+        Description = "Teleporta o jogador selecionado até você",
+        Callback = function()
+            local pl = game:GetService("Players"):FindFirstChild(selectedPlayerName)
+            local me = game:GetService("Players").LocalPlayer
+            if pl and pl.Character and me and me.Character and me.Character:FindFirstChild("HumanoidRootPart") and pl.Character:FindFirstChild("HumanoidRootPart") then
+                pl.Character.HumanoidRootPart.CFrame = me.Character.HumanoidRootPart.CFrame + Vector3.new(0, 3, 0)
+            end
+        end,
+    })
+
+    AdminSection:Button({
+        Title = "Curar jogador",
+        Description = "Define a vida do jogador selecionado para o máximo",
+        Callback = function()
+            local pl = game:GetService("Players"):FindFirstChild(selectedPlayerName)
+            if pl and pl.Character and pl.Character:FindFirstChild("Humanoid") then
+                pl.Character.Humanoid.Health = pl.Character.Humanoid.MaxHealth
+            end
+        end,
+    })
+end
+
 -- Adicionar imagem no topo da janela
 local imageSection = MainTab:Section({ Title = "" })
 
